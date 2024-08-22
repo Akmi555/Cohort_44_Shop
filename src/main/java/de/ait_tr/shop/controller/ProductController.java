@@ -38,6 +38,9 @@ GET    /products
 
      */
 
+
+
+
 @RestController
 @RequestMapping("/products")
 @Tag(name = "Product controller", description = "Controller for operations with products")
