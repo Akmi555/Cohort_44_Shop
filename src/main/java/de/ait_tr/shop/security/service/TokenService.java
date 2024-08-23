@@ -102,6 +102,7 @@ public class TokenService {
     public Claims getRefreshClaims(String refreshToken) {
         return getClaims(refreshToken, refreshKey);
     }
+    
 
     public AuthInfo mapClaimsToAuthInfo(Claims claims) {
         // 1. Имя пользователя (username)
