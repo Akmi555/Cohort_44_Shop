@@ -27,7 +27,7 @@ public class ProductDTO {
 
     @Override
     public String toString() {
-        return String.format("Product: id - %d, title - %s, price - %s",
+        return String.format("ProductDto: id - %d, title - %s, price - %s",
                 id, title, price );
     }
 
