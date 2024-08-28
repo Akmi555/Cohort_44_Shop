@@ -39,13 +39,14 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable) // отключаем базовую аутентификацию
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/refresh").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products").permitAll() // разрешено всем
-                        .requestMatchers(HttpMethod.GET, "/products/{id}").authenticated() //  только для аутентифицированных пользователей
-//                        .requestMatchers(HttpMethod.GET, "/products/{id}").hasAnyRole("ADMIN", "USER") //  только для пользователей с ролью USER или ADMIN
-                       .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
-                       .anyRequest().authenticated()
+                                .anyRequest().permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/refresh").permitAll()
+//                        .requestMatchers("/swagger-ui/**", "/v3/api-docs").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/products").permitAll() // разрешено всем
+//                        .requestMatchers(HttpMethod.GET, "/products/{id}").authenticated() //  только для аутентифицированных пользователей
+////                        .requestMatchers(HttpMethod.GET, "/products/{id}").hasAnyRole("ADMIN", "USER") //  только для пользователей с ролью USER или ADMIN
+//                       .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+//                       .anyRequest().authenticated()
                 );
 
        return http.build();

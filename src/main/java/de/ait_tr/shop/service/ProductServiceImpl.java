@@ -1,18 +1,16 @@
 package de.ait_tr.shop.service;
 
+import de.ait_tr.shop.exception_handling.exceptions.FirstTestException;
+import de.ait_tr.shop.exception_handling.exceptions.ThirdTestException;
 import de.ait_tr.shop.model.dto.ProductDTO;
 import de.ait_tr.shop.model.entity.Product;
 import de.ait_tr.shop.repository.ProductRepository;
 import de.ait_tr.shop.service.interfaces.ProductService;
 import de.ait_tr.shop.service.mapping.ProductMappingService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * @author Sergey Bugaenko
@@ -62,9 +60,13 @@ public class ProductServiceImpl implements ProductService {
 
         Product product =  repository.findById(id).orElse(null);
 
-        if (product == null || !product.isActive() ) {
-            throw new RuntimeException("Product not found");
+        if (product == null) {
+            throw new ThirdTestException("Product with id " + id + " not found");
         }
+        if (!product.isActive() ) {
+            throw new FirstTestException("This is first Test Exception message");
+        }
+
 
         return mapper.mapEntityToDto(product);
     }

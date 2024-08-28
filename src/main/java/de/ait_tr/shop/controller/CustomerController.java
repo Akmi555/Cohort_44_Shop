@@ -1,5 +1,7 @@
 package de.ait_tr.shop.controller;
 
+import de.ait_tr.shop.exception_handling.exceptions.FirstTestException;
+import de.ait_tr.shop.exception_handling.exceptions.ThirdTestException;
 import de.ait_tr.shop.model.entity.Customer;
 import de.ait_tr.shop.service.interfaces.CustomerService;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,7 @@ public class CustomerController   {
 
     @GetMapping("/{id}")
     public Customer getById(@PathVariable long id) {
+
         return service.getById(id);
     }
 

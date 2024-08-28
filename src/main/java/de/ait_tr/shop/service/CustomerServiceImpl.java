@@ -1,5 +1,6 @@
 package de.ait_tr.shop.service;
 
+import de.ait_tr.shop.exception_handling.exceptions.ThirdTestException;
 import de.ait_tr.shop.model.entity.Customer;
 import de.ait_tr.shop.service.interfaces.CustomerService;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer getById(long id) {
+        if (id == 5) {
+            throw new ThirdTestException("Customer controller exception");
+        }
         return null;
     }
 

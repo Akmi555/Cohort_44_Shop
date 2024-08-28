@@ -1,5 +1,7 @@
 package de.ait_tr.shop.controller;
 
+import de.ait_tr.shop.exception_handling.Response;
+import de.ait_tr.shop.exception_handling.exceptions.FirstTestException;
 import de.ait_tr.shop.model.dto.ProductDTO;
 import de.ait_tr.shop.service.interfaces.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -64,7 +69,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content) })
 
     @PostMapping
-    public ProductDTO saveProduct(@RequestBody ProductDTO productDTO) {
+    public ProductDTO saveProduct(@Valid @RequestBody ProductDTO productDTO) {
         // TODO обращаемся к сервису для сохранения продукты
         return productService.saveProduct(productDTO);
     }
@@ -89,6 +94,11 @@ public class ProductController {
     @GetMapping("/{product_id}")
     public ProductDTO getById(
             @Parameter(description = "The id that needs to be fetched. ", required = true) @PathVariable("product_id") long id) {
+        // Проверяем, если ID равен 10, выбрасываем исключение
+        // ТАК делать НЕЛЬЗЯ! Обработка, бизнес-логика должна быть ТОЛЬКЛ в сервисах!!!
+//        if (id == 10) {
+//            throw new FirstTestException("ID cannot be 10");
+//        }
         return productService.getById(id);
     }
 
@@ -149,5 +159,12 @@ public class ProductController {
     @GetMapping("/average-price")
     public BigDecimal getAveragePrice() {
         return productService.getAveragePrice();
+    }
+
+
+    @ExceptionHandler(FirstTestException.class)
+    public ResponseEntity<Response> handleException(FirstTestException e) {
+        Response response = new Response(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
