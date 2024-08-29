@@ -31,4 +31,4 @@ logging:
     root: info
 
 messages:
-  hello: Hello from Digital Ocean!
+  hello: Hello from Digital Ocean! URA!
