@@ -3,9 +3,9 @@ spring:
   application:
     name: Shop
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${DB_HOST}/g_44_shop
+    username: ${DB_USER}
+    password: ${DB_PASS}
     driver-class-name: org.postgresql.Driver
 
   liquibase:
@@ -30,5 +30,6 @@ logging:
   level:
     root: info
 
+
 messages:
-  hello: Hello from Digital Ocean!
+  hello: Hello from Local!
