@@ -1,0 +1,44 @@
+package de.ait_tr.shop.service;
+
+import de.ait_tr.shop.model.entity.ConfirmationCode;
+import de.ait_tr.shop.model.entity.User;
+import de.ait_tr.shop.repository.ConfirmationCodeRepository;
+import de.ait_tr.shop.service.interfaces.ConfirmationCodeService;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 30.08.2024
+ */
+
+@Service
+public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
+
+    private final ConfirmationCodeRepository repository;
+
+    public ConfirmationCodeServiceImpl(ConfirmationCodeRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public String generationConfirmationCode(User user) {
+        // Генерация уникально кода (использую UUID)
+        String code = UUID.randomUUID().toString();
+
+        // Создание объекта ConfirmCode и сохранение его в базу
+        ConfirmationCode confirmationCode = new ConfirmationCode();
+        confirmationCode.setCode(code);
+        confirmationCode.setUser(user);
+        confirmationCode.setExpired(LocalDateTime.now().plusDays(1)); // срок действия 1 день
+//        confirmationCode.setExpired(LocalDateTime.now().plusMinutes(1)); // срок действия 1 минута
+
+        repository.save(confirmationCode);
+
+
+        //Вернуть код
+        return code;
+    }
+}
