@@ -37,7 +37,6 @@ public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
 
         repository.save(confirmationCode);
 
-
         //Вернуть код
         return code;
     }
