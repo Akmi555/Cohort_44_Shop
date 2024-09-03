@@ -1,6 +1,7 @@
 package de.ait_tr.shop.service.interfaces;
 
 import de.ait_tr.shop.model.dto.ProductDTO;
+import de.ait_tr.shop.model.dto.ProductSupplyDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
  */
 
 public interface ProductService {
+
+    List<ProductSupplyDto> getAllActiveProductsForSupply();
 
     void attachImage(String imageUrl, String productTitle);
 

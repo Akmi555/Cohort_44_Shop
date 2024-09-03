@@ -37,10 +37,21 @@ public class Product {
     @Column(name = "image")
     private String image;
 
+    @Column
+    private int quantity;
+
     @Override
     public String toString() {
         return String.format("Product: id - %d, title - %s, price - %s, active - %s",
                 id, title, price, active ? "yes" : "no" );
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getImage() {
@@ -89,7 +100,7 @@ public class Product {
         if (o == null || getClass() != o.getClass()) return false;
 
         Product product = (Product) o;
-        return active == product.active && Objects.equals(id, product.id) && Objects.equals(title, product.title) && Objects.equals(price, product.price) && Objects.equals(image, product.image);
+        return active == product.active && quantity == product.quantity && Objects.equals(id, product.id) && Objects.equals(title, product.title) && Objects.equals(price, product.price) && Objects.equals(image, product.image);
     }
 
     @Override
@@ -99,6 +110,7 @@ public class Product {
         result = 31 * result + Objects.hashCode(price);
         result = 31 * result + Boolean.hashCode(active);
         result = 31 * result + Objects.hashCode(image);
+        result = 31 * result + quantity;
         return result;
     }
 }

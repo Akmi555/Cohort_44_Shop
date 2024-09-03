@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/hello").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/system/products").hasRole("SUPPLIER")
                         .requestMatchers(HttpMethod.POST,  "/register", "auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET,  "/confirm").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/refresh").permitAll()
