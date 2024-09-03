@@ -7,7 +7,7 @@ import de.ait_tr.shop.service.interfaces.ConfirmationCodeService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Optional;import java.util.UUID;
 
 /**
  * @author Sergey Bugaenko
@@ -40,4 +40,19 @@ public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
         //Вернуть код
         return code;
     }
+
+    @Override
+    public Optional<ConfirmationCode> findCodeByUser(User user) {
+        return repository.findCodeByUser(user);
+    }
+    @Override
+    public void remove(ConfirmationCode code) {
+        repository.delete(code);
+    }
+
+    @Override
+    public Optional<ConfirmationCode> findByCode(String code) {
+        return repository.findByCode(code);
+    }
+
 }

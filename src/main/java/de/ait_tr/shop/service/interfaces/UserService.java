@@ -10,4 +10,5 @@ import de.ait_tr.shop.model.dto.UserRegisterDto;
 public interface UserService {
 
     void register(UserRegisterDto registerDto);
+    String confirmationMailByCode(String code);
 }

@@ -8,6 +8,7 @@ import de.ait_tr.shop.repository.ProductRepository;
 import de.ait_tr.shop.service.interfaces.ProductService;
 import de.ait_tr.shop.service.mapping.ProductMappingService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,15 +23,27 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductMappingService mapper;
+    private final ProductRepository productRepository;
 
 //    private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
-    public ProductServiceImpl(ProductRepository repository, ProductMappingService mapper) {
+    public ProductServiceImpl(ProductRepository repository, ProductMappingService mapper, ProductRepository productRepository) {
         this.repository = repository;
         this.mapper = mapper;
+        this.productRepository = productRepository;
     }
 
 
+    @Transactional
+    @Override
+    public void attachImage(String imageUrl, String productTitle) {
+        // Ищем продукт в базе по названию
+        Product product = productRepository.findByTitle(productTitle)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Присваиваем продукту ссылку на изображение
+        product.setImage(imageUrl);
+    }
 
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) {

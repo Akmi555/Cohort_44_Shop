@@ -1,9 +1,9 @@
 package de.ait_tr.shop.service;
 
 import de.ait_tr.shop.model.dto.UserRegisterDto;
-import de.ait_tr.shop.model.entity.User;
+import de.ait_tr.shop.model.entity.ConfirmationCode;import de.ait_tr.shop.model.entity.User;
 import de.ait_tr.shop.repository.UserRepository;
-import de.ait_tr.shop.service.interfaces.EmailService;
+import de.ait_tr.shop.service.interfaces.ConfirmationCodeService;import de.ait_tr.shop.service.interfaces.EmailService;
 import de.ait_tr.shop.service.interfaces.RoleService;
 import de.ait_tr.shop.service.interfaces.UserService;
 import de.ait_tr.shop.service.mapping.UserMappingService;
@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,13 +28,15 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
     private final EmailService emailService;
     private final UserMappingService userMappingService;
+    private final ConfirmationCodeService confirmationCodeService;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, RoleService roleService, EmailService emailService, UserMappingService userMappingService) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, RoleService roleService, EmailService emailService, UserMappingService userMappingService, ConfirmationCodeService confirmationCodeService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.emailService = emailService;
         this.userMappingService = userMappingService;
+        this.confirmationCodeService = confirmationCodeService;
     }
 
     @Transactional
@@ -51,6 +54,10 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) {
             // Пользователь в базе со статусов active - false
             user = optionalUser.get();
+            ConfirmationCode codeOld = confirmationCodeService.findCodeByUser(user).orElse(null);
+            if (codeOld != null) {
+                confirmationCodeService.remove(codeOld);
+            }
         } else {
             // Регистрация нового пользователь
             // Присваиваем роль User новому пользователю
@@ -58,7 +65,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //Устанавливаем зашифрованный пароль
-        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(registerDto.password()));
 
         // На всякий случай
         user.setActive(false);
@@ -69,5 +76,22 @@ public class UserServiceImpl implements UserService {
         // Отправляем письмо с кодом подтверждения
         emailService.sendConfirmationEmail(user);
 
+    }
+
+    @Transactional
+    @Override
+    public String confirmationMailByCode(String code) {
+        ConfirmationCode confirmationCode = confirmationCodeService.findByCode(code).orElseThrow(
+                () -> new RuntimeException("Code not found")
+        );
+
+        if (confirmationCode.getExpired().isAfter(LocalDateTime.now())) {
+            User user = confirmationCode.getUser();
+            user.setActive(true);
+            userRepository.save(user);
+            return user.getEmail() + " confirmed!";
+        }
+
+        throw new RuntimeException("Wrong code");
     }
 }
